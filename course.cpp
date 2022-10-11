@@ -5,16 +5,22 @@
 
 using namespace std;
 
-Course::Course(const char* const name, const int num_credit, const int course_capacity) {
+Course::Course(const char* const name, const int num_credit, const int course_capacity) : num_credit{num_credit}, capacity{course_capacity} {
     // TODO
+    this->name = new char[strlen(name)+1];
+    strcpy(this->name, name); 
+
 }
 
-Course::Course(const Course& course) {
+Course::Course(const Course& course) : num_credit{course.num_credit}, capacity{course.capacity} {
     // TODO
+    this->name = new char[strlen(course.name)+1];
+    strcpy(this->name, course.name); 
 }
 
 Course::~Course() {
     // TODO
+    delete[] name;
 }
 
 void Course::print_info() const {

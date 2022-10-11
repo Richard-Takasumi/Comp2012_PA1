@@ -8,16 +8,22 @@ using namespace std;
 const int STUDENT_INIT_MAX_CREDIT = 18;
 const int STUDENT_MAX_NUM_COURSE = 10;
 
-Student::Student(const char* const name, const int student_id, const double gpa) {
+Student::Student(const char* const name, const int student_id, const double gpa) : gpa{gpa}, student_id{student_id} {
     // TODO
+    this->name = new char[strlen(name)+1];
+    strcpy(this->name, name);
+
 }
 
-Student::Student(const Student& student) {
+Student::Student(const Student& student) : student_id{student.student_id}, gpa{student.gpa} {
     // TODO
+    this->name = new char[strlen(student.name)+1];
+    strcpy(this->name, student.name);
 }
 
 Student::~Student() {
     // TODO
+    delete[] name;
 }
 
 void Student::print_info() const {
