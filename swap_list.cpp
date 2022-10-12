@@ -34,7 +34,6 @@ Swap_List::Swap_List() {
 Swap_List::Swap_List(const Swap_List& swap_list) {
     // TODO
 
-
     //deep copy head
     if (swap_list.head != nullptr) {
         this->head = new Swap(swap_list.head->original_course_name, swap_list.head->target_course_name, swap_list.head->next);
@@ -48,6 +47,7 @@ Swap_List::Swap_List(const Swap_List& swap_list) {
     //set prev = nullptr;
     Swap* curr = nullptr;
     Swap* prev = nullptr;
+    // if more than two nodes we can begin iterating
     if (swap_list.head->next != nullptr) {
         curr = swap_list.head->next;
         prev = this->head;

@@ -12,6 +12,15 @@ Student::Student(const char* const name, const int student_id, const double gpa)
     // TODO
     this->name = new char[strlen(name)+1];
     strcpy(this->name, name);
+    this->max_credit = STUDENT_INIT_MAX_CREDIT;
+    this->curr_credit = 0;
+    this->num_enrolled_course = 0;
+    this->enrolled_courses = new char*[STUDENT_MAX_NUM_COURSE];
+    for (int i = 0; i < STUDENT_MAX_NUM_COURSE; i++) {
+        this->enrolled_courses[i] = nullptr;
+    }
+    this->pending_credit = 0;
+    this->swap_list = nullptr;
 
 }
 
@@ -19,11 +28,44 @@ Student::Student(const Student& student) : student_id{student.student_id}, gpa{s
     // TODO
     this->name = new char[strlen(student.name)+1];
     strcpy(this->name, student.name);
+    this->max_credit = STUDENT_INIT_MAX_CREDIT;
+    this->curr_credit = student.curr_credit;
+    this->num_enrolled_course = student.num_enrolled_course;
+
+
+    //create enrolled_courses dynamic pointer to character array and initialize all to nullptr 
+    this->enrolled_courses = new char*[STUDENT_MAX_NUM_COURSE];
+
+    for (int i = 0; i < STUDENT_MAX_NUM_COURSE; i++) {
+        if (student.enrolled_courses[i]) {
+            this->enrolled_courses[i] = student.enrolled_courses[i];
+        } else {
+            this->enrolled_courses[i] = nullptr;
+        }
+    }
+    this->pending_credit = student.pending_credit;
+
+    this->swap_list = new Swap_List(*student.swap_list);
 }
 
 Student::~Student() {
     // TODO
-    delete[] name;
+    delete[] this->name;
+
+    if (this->enrolled_courses != nullptr) {
+        for (int i = 0; i < this->num_enrolled_course; i++) {
+            if (enrolled_courses[i]) {
+                delete[] this->enrolled_courses[i];
+            }
+            
+        }
+        delete[] this->enrolled_courses;
+    }
+
+    //because swap_list is a class, it is responsible for it's own deletion, therefore just call destructor
+    delete this->swap_list;
+
+
 }
 
 void Student::print_info() const {

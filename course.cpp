@@ -9,6 +9,14 @@ Course::Course(const char* const name, const int num_credit, const int course_ca
     // TODO
     this->name = new char[strlen(name)+1];
     strcpy(this->name, name); 
+    this->size = 0;
+    this->wait_list = new Wait_List();
+    this->students_enrolled = new int[capacity];
+    for (int i = 0; i < capacity; i++) {
+        this->students_enrolled[i] = 0;
+    }
+
+
 
 }
 
@@ -16,11 +24,23 @@ Course::Course(const Course& course) : num_credit{course.num_credit}, capacity{c
     // TODO
     this->name = new char[strlen(course.name)+1];
     strcpy(this->name, course.name); 
+
+    this->size = course.size;
+    this->wait_list = new Wait_List(*course.wait_list);
+
+    this->students_enrolled = new int[course.capacity];
+    for (int i = 0; i < course.capacity; i++) {
+        //need to set empty slots to 0?
+        this->students_enrolled[i] = course.students_enrolled[i];
+    }
+
 }
 
 Course::~Course() {
     // TODO
     delete[] name;
+    delete this->wait_list;
+    delete[] this->students_enrolled;
 }
 
 void Course::print_info() const {
