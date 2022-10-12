@@ -10,4 +10,4 @@ pa1.exe: $(OBJECTS)
 	g++ $(CPPFLAGS) -c $< -o $@
 
 clean:
-	rm  -f  *.o *.exe
+	del  -f  *.o *.exe

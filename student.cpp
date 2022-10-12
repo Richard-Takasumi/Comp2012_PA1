@@ -20,7 +20,7 @@ Student::Student(const char* const name, const int student_id, const double gpa)
         this->enrolled_courses[i] = nullptr;
     }
     this->pending_credit = 0;
-    this->swap_list = nullptr;
+    this->swap_list = new Swap_List();
 
 }
 

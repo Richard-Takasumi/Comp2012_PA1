@@ -66,9 +66,28 @@ int main() {
         {
             System* system = new System(20, 50);
 
-            system->admit("Adam", 1000, 3.0);
+            system->admit("Adam-3.0", 1000, 3.0);
+            system->admit("Steve-3.7", 1001, 3.7);
+            system->admit("Bob-3.3", 1002, 3.3);
             bool success = system->apply_overload(1000, 30);
+            bool success2 = system->apply_overload(1001, 20);
+            bool success3 = system->apply_overload(1002, 18);
+
             if(success) {
+                cout << "Apply Overload Successfully." << endl;
+            } 
+            else{
+                cout << "Fail to overload." << endl;
+            }
+            
+            if(success2) {
+                cout << "Apply Overload Successfully." << endl;
+            } 
+            else{
+                cout << "Fail to overload." << endl;
+            }
+            
+            if(success3) {
                 cout << "Apply Overload Successfully." << endl;
             } 
             else{

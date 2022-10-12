@@ -52,10 +52,75 @@ void System::admit(const char* const name, const int student_id, const double gp
 
 bool System::apply_overload(const int student_id, const int request_credit) {
     // TODO
+
+    //find the student's gpa
+    Student* student = this->student_database->get_student_by_id(student_id);
+
+    //if the student does not exist return false
+    if (student == nullptr) {
+        return false;
+    }
+
+
+    // then do case handling
+
+    if (request_credit > 30) {cout << 0 << endl; return false;}
+    if (request_credit >= 24 && student->get_gpa() < 3.7) {cout << 1 << endl; return false;}
+    if (request_credit >= 18 && student->get_gpa() < 3.3) {cout << 2 << endl; return false;}
+
+    return true;
+
+
 }
 
 bool System::add(const int student_id, const char* const course_name) {
     // TODO
+
+    // case 1 (credits are fine AND course is vacant):
+    // student num credits + pending credits <= student max_credits
+    // update course size
+    // update course students_enrolled
+    // update student curr_credits
+
+    // accept, return true 
+
+    // case 2 (credits are fine AND course is NOT vacant):
+    // update student's pending credits
+    // update course wait_list by: 
+        // construct a student_listNode;
+        // append student to the end of wait_list;
+        // update wait_list pointers
+    // return true
+
+    // case 3 (credits are not fine, doesn't matter if the course is vacant or not):
+    // student num credits + pending credits > student max_credits 
+    // reject, return false
+
+
+
+
+    Student* student = this->student_database->get_student_by_id(student_id);
+    Course* course = this->course_database->get_course_by_name(course_name);
+
+    // assume course if full then check and update.
+    bool is_vacant = false;
+    bool valid_credit_count = false;
+
+    if (course->get_size() < course->get_capacity()) {
+        is_vacant = true;
+    }
+
+    if (student->get_curr_credit() + student->get_pending_credit() <= student->get_max_credit()) {
+        valid_credit_count = true;
+    } 
+    
+    //then we can do case handling
+    if (valid_credit_count && is_vacant) {
+
+        return true;
+    }
+
+
 }
 
 bool System::swap(const int student_id, const char* const original_course_name, const char* const target_course_name) {
