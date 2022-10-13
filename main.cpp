@@ -141,6 +141,7 @@ int main() {
             system->add_course("ECON1000", 3, 50);
             system->add_course("MATH1003", 2, 10);
             system->add_course("LANG1002A", 3, 20);
+            system->add_course("LANG1003H", 3, 22);
 
             system->add(1000, "COMP2012");
             system->add(1000, "COMP1000");
@@ -148,6 +149,7 @@ int main() {
             system->add(1000, "ECON1000");
             system->add(1000, "MATH1003");
             system->add(1000, "LANG1002A");
+            system->add(1000, "LANG1003H");
             system->print_info();
             delete system;
         }
