@@ -5,12 +5,14 @@ using namespace std;
 
 int main () {
 
-    int x = 0;
-    while ( x != 5) {
-        int*p = new int;
-        cout << p << endl;
-    
-        x++;
+   
+    int* x = new int[5]{1,2,3,4};
+
+    x[4] = 69;
+
+    for (int i = 0; i < 5; i++) {
+        cout << x[i] << endl;
     }
+
 
 }

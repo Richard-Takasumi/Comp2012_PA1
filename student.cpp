@@ -17,6 +17,7 @@ Student::Student(const char* const name, const int student_id, const double gpa)
     this->num_enrolled_course = 0;
     this->enrolled_courses = new char*[STUDENT_MAX_NUM_COURSE];
     for (int i = 0; i < STUDENT_MAX_NUM_COURSE; i++) {
+        // set to nullptr or allocate mem equal to a max string length?
         this->enrolled_courses[i] = nullptr;
     }
     this->pending_credit = 0;
@@ -54,7 +55,7 @@ Student::~Student() {
 
     if (this->enrolled_courses != nullptr) {
         for (int i = 0; i < this->num_enrolled_course; i++) {
-            if (enrolled_courses[i]) {
+            if (this->enrolled_courses[i]) {
                 delete[] this->enrolled_courses[i];
             }
             

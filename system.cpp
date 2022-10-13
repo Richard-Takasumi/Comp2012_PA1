@@ -81,6 +81,7 @@ bool System::add(const int student_id, const char* const course_name) {
     // update course size
     // update course students_enrolled
     // update student curr_credits
+    // update student enrolled_courses
 
     // accept, return true 
 
@@ -114,12 +115,80 @@ bool System::add(const int student_id, const char* const course_name) {
         valid_credit_count = true;
     } 
     
-    //then we can do case handling
+    //CASE 1
     if (valid_credit_count && is_vacant) {
+
+        //update the course size and student_enrolled list;
+        int course_size = course->get_size();
+        course->set_size(course_size+1);
+
+        int* updated_students_enrolled = course->get_students_enrolled();
+        updated_students_enrolled[course_size] = student_id;
+        
+        //not sure if the below line is required.
+        course->set_students_enrolled(updated_students_enrolled);
+        
+        //update the student curr_credits, num_enrolled_courses and enrolled_courses
+        student->set_curr_credit(student->get_curr_credit()+course->get_num_credit());
+        student->set_num_enrolled_course(student->get_num_enrolled_course()+1);
+
+        //update student->enrolled_courses;
+        char** updated_enrolled_courses = student->get_enrolled_courses();
+
+        //update student->num_enrolled_courses
+        updated_enrolled_courses[student->get_num_enrolled_course()-1] = new char[strlen(course->get_name()+1)];
+        strcpy(updated_enrolled_courses[student->get_num_enrolled_course()-1], course->get_name());
+
+        //not sure if this line is required
+        student->set_enrolled_courses(updated_enrolled_courses);
+
 
         return true;
     }
 
+    //CASE 2
+    if (valid_credit_count && !is_vacant) {
+
+        //update student->pending_credits
+        student->set_pending_credit(student->get_pending_credit()+course->get_num_credit());
+
+        //create student_waitlist node;
+        //append the node to the course->Waitlist;
+        Student_ListNode* student_node = new Student_ListNode(student->get_student_id(), nullptr);
+
+        Wait_List* course_waitlist = course->get_wait_list();
+        Student_ListNode* head = course_waitlist->get_head();
+        Student_ListNode* end = course_waitlist->get_end();
+
+        //waitlist is empty
+        if (head == nullptr) {
+            course_waitlist->set_head(student_node); 
+            course_waitlist->set_end(student_node);
+        } 
+        
+        // dont' need to check if head == nullptr because of else if
+
+        //waitlist only has one node
+        else if (head == end) {
+            head->next = student_node;
+            course_waitlist->set_end(student_node);
+        } 
+        
+        //waitlist has more than one node
+        else if (head != end) {
+            end->next = student_node;
+            course_waitlist->set_end(student_node);
+        }
+
+        return true;
+    }
+
+
+    //CASE 3
+    if (!valid_credit_count) {
+
+        return false;
+    }
 
 }
 
