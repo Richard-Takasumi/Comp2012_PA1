@@ -28,6 +28,7 @@ Swap::~Swap() {
 
 Swap_List::Swap_List() {
     // TODO
+    //nullptr or make a new Swap object?
     head = nullptr;
 }
 

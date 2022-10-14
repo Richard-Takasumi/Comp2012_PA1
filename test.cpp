@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 
 
 using namespace std;
@@ -6,13 +7,13 @@ using namespace std;
 int main () {
 
    
-    int* x = new int[5]{1,2,3,4};
+    char a[]{"hello"};
+    char b[]{"hi"};
 
-    x[4] = 69;
+    strcpy(a,b);
 
-    for (int i = 0; i < 5; i++) {
-        cout << x[i] << endl;
-    }
+    cout << a << endl;
+    
 
 
 }

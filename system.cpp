@@ -322,18 +322,34 @@ void System::drop(const int student_id, const char* const course_name) {
     Student* student = this->student_database->get_student_by_id(student_id);
     Course* course = this->course_database->get_course_by_name(course_name);
     int enrolled_student_index = search_student_id(student_id, course);
-    int enrolled_course_index = search_course_index(student, course_name);
-
     // UPDATING COURSE
     // Update course->students_enrolled
-    // By removing the student_id in the array, and replacing it with the last...
-    // Update course->size
-    // check the waitlist
+    //      By removing the student_id in the array, and replacing it with the last...
+    //      first copy last,
+    //      then find index of to be removed id and replace it,
+    //      then de-allocate last
+    int* student_ids = course->get_students_enrolled();
+    if (enrolled_student_index == course->get_size()-1) {
+        student_ids[course->get_size()-1] = NULL;
+    } else {
+        student_ids[enrolled_student_index] = student_ids[course->get_size()-1];
+        student_ids[course->get_size()-1] = NULL;
+    }
+
+    course->set_size(course->get_size()-1);
+
+    Wait_List* wait_list= course->get_wait_list();
+
+
+    //
     // if there is a student with the course in their swap_list, it means the swap / add was valid
     // case 1:
     //      student came from add (the student does not have the course in their swap list)
     //      call add(student_id, course);
-    //          ^ this add call will update everything necessary
+    //          ^ this add call will update everything necessary relating to the student and course
+    //      still need to update the waitlist?
+
+
     // case 2:
     //      student came from swap (the student DOES have the course in their swap list AND they are first in line)
     //      need to call swap() function successfully after reducing the capacity
@@ -345,12 +361,89 @@ void System::drop(const int student_id, const char* const course_name) {
     
 
 
+    // Update course->size
+    // if there is a waitlist
+    if (wait_list != nullptr) {
+        Student_ListNode* wl_head = wait_list->get_head();
+        Student_ListNode* wl_end = wait_list->get_end();
+        
+        //case 1:
+        Student* first_waitlist_student = this->student_database->get_student_by_id(wl_head->student_id);
+        Swap_List* wl_student_swap_list = first_waitlist_student->get_swap_list();
+
+        // access the student in the front of the wait_list's swap requests
+        // if none of the swap requests match the name of the course that the original
+        // student is dropping then it means that this first_waitlist student 
+        // got in through the add() function
+        // otherwise it means they have a pending swap and we need to consider 
+        // multiple other things
+
+        // iterate through the swap_list of the first student in the waitlist
+        Swap* p = wl_student_swap_list->get_head();
+
+        // if the student has a swap_list at all
+        if (p != nullptr) {
+            // iterate the swap list and try to find a swap which means the student is swapping into the course
+            while (strcmp(p->target_course_name, course_name) != 0) {
+                p = p->next;
+            }
+            // if unable to find a matching swap request into the course
+
+            // CASE 1
+            if (p == nullptr) {
+                // simply apply add function for first_waitlist_student and then
+                // update the swap_list accordingly by deleting the first and
+                // repointing head of swap_list
+                add(first_waitlist_student->get_student_id(), course_name);
+
+                Swap* temp = wl_student_swap_list->get_head();
+                wl_student_swap_list->set_head(temp->next);
+                delete temp;
+            } 
+            // if they DO have a swap request into the course, they are swapping in SUCCESSFULLY essentially.
+            // CASE 2;
+            else if (p != nullptr) {
+                swap(first_waitlist_student->get_student_id(), p->original_course_name, p->target_course_name);
+                Swap* temp = wl_student_swap_list->get_head();
+                wl_student_swap_list->set_head(temp->next);
+                delete temp;
+            } 
+            else {
+                cout << "something has gone wrong in drop() function of system.cpp" << endl;
+            }
+
+        } 
+        // if the first_wl_student doesn't have a swap_list, then it just means they are on the waitlist through add. 
+        // CASE 1
+        else {
+                add(first_waitlist_student->get_student_id(), course_name);
+                Swap* temp = wl_student_swap_list->get_head();
+                wl_student_swap_list->set_head(temp->next);
+                delete temp;
+        }
+
+        Student_ListNode* temp_studentNode = wl_head;
+        // the waitlist here definitely exists
+        // therefore if only one student in waitlist
+        // set end to nullptr
+        // then set head to next (which is nullptr if only one)
+        // then delete the head;
+        // other cases should be handled by implication
+        if (wl_head == wl_end) {
+            wl_end = nullptr;
+        }
+        wl_head = wl_head->next;
+        delete temp_studentNode;
+    }
 
 
 
 
     // UPDATING STUDENT
     // reduce curr_credit
+    student->set_curr_credit(student->get_curr_credit() - course->get_num_credit());
+
+
     // update student->enrolled_courses
         // case 1: the course is at the end of the enrolled_courses array
             //just delete[] enrolled_courses[num_enrolled_courses-1]
@@ -359,14 +452,19 @@ void System::drop(const int student_id, const char* const course_name) {
             // then strcpy enrolled_courses[enrolled_course_index],  enrolled_courses[size-1]
             // then delete[] enrolled_courses[num_enrolled_courses-1]
 
+    char** p = student->get_enrolled_courses();
+    int last_course_index = student->get_num_enrolled_course()-1;
+    int enrolled_course_index = search_course_index(student, course_name);
+
+    if ( enrolled_course_index == last_course_index) {
+        delete[] p[enrolled_course_index];
+    } else {
+        strcpy(p[enrolled_course_index], p[last_course_index]);
+        delete[] p[last_course_index];
+    }
     // decrease student->num_enrolled_courses by 1;
+    student->set_num_enrolled_course(student->get_num_enrolled_course() - 1);
 
-
-
-    // update dropped course
-    // now that the dropped course is vacant, update the waitlist for the dropped course
-
-    // TWO CASES:
 
 
 }
