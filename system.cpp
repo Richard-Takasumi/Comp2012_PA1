@@ -70,14 +70,13 @@ bool System::apply_overload(const int student_id, const int request_credit) {
     if (student == nullptr) {
         return false;
     }
-
-
     // then do case handling
 
-    if (request_credit > 30) {cout << 0 << endl; return false;}
-    if (request_credit >= 24 && student->get_gpa() < 3.7) {cout << 1 << endl; return false;}
-    if (request_credit >= 18 && student->get_gpa() < 3.3) {cout << 2 << endl; return false;}
+    if (request_credit > 30) { return false;}
+    if (request_credit > 18 && student->get_gpa() < 3.3) {  return false;}
+    if (request_credit >= 24 && student->get_gpa() < 3.7) {  return false;}
 
+    student->set_max_credit(request_credit);
     return true;
 
 
@@ -151,11 +150,12 @@ bool System::add(const int student_id, const char* const course_name) {
         char** updated_enrolled_courses = student->get_enrolled_courses();
 
         //update student->num_enrolled_courses
-        updated_enrolled_courses[student->get_num_enrolled_course()-1] = new char[strlen(course->get_name()+1)];
+        updated_enrolled_courses[student->get_num_enrolled_course()-1] = new char[strlen(course->get_name())+1];
         strcpy(updated_enrolled_courses[student->get_num_enrolled_course()-1], course->get_name());
 
         //not sure if this line is required
         student->set_enrolled_courses(updated_enrolled_courses);
+
 
 
         return true;
