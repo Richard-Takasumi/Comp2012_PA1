@@ -38,8 +38,10 @@ Student::Student(const Student& student) : student_id{student.student_id}, gpa{s
     this->enrolled_courses = new char*[STUDENT_MAX_NUM_COURSE];
 
     for (int i = 0; i < STUDENT_MAX_NUM_COURSE; i++) {
-        if (student.enrolled_courses[i]) {
-            this->enrolled_courses[i] = student.enrolled_courses[i];
+        if (student.enrolled_courses[i] != nullptr) {
+            int student_length = strlen(student.enrolled_courses[i]);
+            this->enrolled_courses[i] = new char[student_length+1];
+            strcpy(this->enrolled_courses[i], student.enrolled_courses[i]);
         } else {
             this->enrolled_courses[i] = nullptr;
         }
@@ -51,11 +53,14 @@ Student::Student(const Student& student) : student_id{student.student_id}, gpa{s
 
 Student::~Student() {
     // TODO
+
+    // cout << "student killing: " << this->name << endl;
+
     delete[] this->name;
 
     if (this->enrolled_courses != nullptr) {
         for (int i = 0; i < this->num_enrolled_course; i++) {
-            if (this->enrolled_courses[i]) {
+            if (this->enrolled_courses[i] != nullptr) {
                 delete[] this->enrolled_courses[i];
             }
             

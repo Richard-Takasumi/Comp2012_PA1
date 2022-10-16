@@ -16,8 +16,6 @@ Course::Course(const char* const name, const int num_credit, const int course_ca
         this->students_enrolled[i] = 0;
     }
 
-
-
 }
 
 Course::Course(const Course& course) : num_credit{course.num_credit}, capacity{course.capacity} {
@@ -38,6 +36,7 @@ Course::Course(const Course& course) : num_credit{course.num_credit}, capacity{c
 
 Course::~Course() {
     // TODO
+    // cout << "course killing: " << this->name << endl;
     delete[] name;
     delete this->wait_list;
     delete[] this->students_enrolled;

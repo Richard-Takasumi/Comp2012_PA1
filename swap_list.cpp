@@ -18,6 +18,9 @@ Swap::Swap(const char* const original_course_name, const char* const target_cour
 
 Swap::~Swap() {
     // TODO
+
+    // cout << "killing swap of" << original_course_name << " to " << target_course_name << endl;
+
     delete[] original_course_name;
     delete[] target_course_name;
 
@@ -74,6 +77,7 @@ Swap_List::Swap_List(const Swap_List& swap_list) {
 
 Swap_List::~Swap_List() {
     // TODO
+    // cout << "swap_list killing" << endl;
     Swap* prev = nullptr;
 
     while (this->head != nullptr) {

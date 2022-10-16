@@ -62,6 +62,7 @@ Wait_List::Wait_List(const Wait_List& wait_list) {
 
 Wait_List::~Wait_List() {
     // TODO
+    // cout << "waitlist_killing: " << endl;
     Student_ListNode* prev = nullptr;
 
     while (this->head != nullptr) {
